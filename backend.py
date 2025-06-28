@@ -9,10 +9,6 @@ API_KEY = os.getenv("API_KEY")
 def get_data(place, forecast_days=None):
     url = f"http://api.openweathermap.org/data/2.5/forecast?q={place}&appid={API_KEY}"
     response = requests.get(url)
-    if response.status_code != 200:
-        return None
-
-
     data = response.json()
     filtered_data = data["list"]
     nr_values = 8 * forecast_days

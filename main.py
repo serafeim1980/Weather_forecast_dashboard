@@ -13,10 +13,9 @@ st.subheader(f"{option} for the next {days} days in {place}")
 
 if place:
     # Get the temperature/sky data
-    filtered_data = get_data(place,days)
-    if filtered_data is None:
-        st.error("The city your entered doesnt exist.please try again!")
-    else:
+    try:
+        filtered_data = get_data(place,days)
+
         if option == "Temperature":
             # i took kelvin temperature from api so i had to -273.15 to show the correct temperature in celsius
             temperatures = [dict["main"]["temp"] -273.15 for dict in filtered_data]
@@ -32,3 +31,6 @@ if place:
             image_paths = [images[condition] for condition in sky_conditions]
             print(sky_conditions)
             st.image(image_paths, width=115)
+    except KeyError:
+        st.write("The city your entered doesnt exist.please try again!")
+

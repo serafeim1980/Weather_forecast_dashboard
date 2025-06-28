@@ -14,20 +14,21 @@ st.subheader(f"{option} for the next {days} days in {place}")
 if place:
     # Get the temperature/sky data
     filtered_data = get_data(place,days)
+    if filtered_data is None:
+        st.error("The city your entered doesnt exist.please try again!")
+    else:
+        if option == "Temperature":
+            # i took kelvin temperature from api so i had to -273.15 to show the correct temperature in celsius
+            temperatures = [dict["main"]["temp"] -273.15 for dict in filtered_data]
+            dates = [dict["dt_txt"] for dict in filtered_data]
+            # Create a temperature plot
+            figure = px.line(x=dates, y=temperatures, labels={"x": "Date", "y": "Temperature (C)"})
+            st.plotly_chart(figure)
 
-
-    if option == "Temperature":
-        # i took kelvin temperature from api so i had to -273.15 to show the correct temperature in celsius
-        temperatures = [dict["main"]["temp"] -273.15 for dict in filtered_data]
-        dates = [dict["dt_txt"] for dict in filtered_data]
-        # Create a temperature plot
-        figure = px.line(x=dates, y=temperatures, labels={"x": "Date", "y": "Temperature (C)"})
-        st.plotly_chart(figure)
-
-    if option == "Sky":
-        images = {"Clear": "images/clear.png", "Clouds": "images/cloud.png", "Rain": "images/rain.png",
-                  "Snow": "images/snow.png"}
-        sky_conditions = [dict["weather"][0]["main"] for dict in filtered_data]
-        image_paths = [images[condition] for condition in sky_conditions]
-        print(sky_conditions)
-        st.image(image_paths, width=115)
+        elif option == "Sky":
+            images = {"Clear": "images/clear.png", "Clouds": "images/cloud.png", "Rain": "images/rain.png",
+                      "Snow": "images/snow.png"}
+            sky_conditions = [dict["weather"][0]["main"] for dict in filtered_data]
+            image_paths = [images[condition] for condition in sky_conditions]
+            print(sky_conditions)
+            st.image(image_paths, width=115)

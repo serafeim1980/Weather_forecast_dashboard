@@ -17,8 +17,8 @@ if place:
         filtered_data = get_data(place,days)
 
         if option == "Temperature":
-            # i took kelvin temperature from api so i had to -273.15 to show the correct temperature in celsius
-            temperatures = [dict["main"]["temp"] -273.15 for dict in filtered_data]
+            # i took kelvin temperature from api so i had to /10 to show the correct temperature in celsius
+            temperatures = [dict["main"]["temp"] /10 for dict in filtered_data]
             dates = [dict["dt_txt"] for dict in filtered_data]
             # Create a temperature plot
             figure = px.line(x=dates, y=temperatures, labels={"x": "Date", "y": "Temperature (C)"})
